@@ -21,7 +21,7 @@ public class OfficeServiceImpl implements OfficeService {
     private static final Logger LOG = LogManager.getLogger(OfficeServiceImpl.class);
 
     @Autowired
-    OfficeRepository officeRepository;
+    private OfficeRepository officeRepository;
 
     @Override
     public Set<Office> getAllOffices() {
