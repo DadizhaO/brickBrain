@@ -48,8 +48,8 @@ public class OfficeServiceImpl implements OfficeService {
         try {
             officeRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            LOG.warn("Cannot deleteOrder with id{}, because it don't present", id);
-            throw new DeleteException("Cannot delete Order by Id=" + id + ", because it don't present");
+            LOG.warn("Cannot delete Office with id{}, because it don't present", id);
+            throw new DeleteException("Cannot delete Office by Id=" + id + ", because it don't present");
         }
     }
 
