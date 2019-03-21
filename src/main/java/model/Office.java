@@ -2,6 +2,8 @@
 package model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ public class Office implements Serializable {
     @Column
     private String region;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MGR")
     private Salesrep mgr;
@@ -27,6 +30,7 @@ public class Office implements Serializable {
     @Column
     private BigDecimal sales;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "repOffice")
     private Set<Salesrep> salesreps;
 
@@ -52,6 +56,9 @@ public class Office implements Serializable {
         this.salesreps = salesreps;
     }
 
+    public Office(BigDecimal officeId) {
+        this.officeId = officeId;
+    }
 
     public Set<Salesrep> getSalesreps() {
         return salesreps;
@@ -115,10 +122,8 @@ public class Office implements Serializable {
                 "officeId=" + officeId +
                 ", city='" + city + '\'' +
                 ", region='" + region + '\'' +
-                ", mgr=" + mgr.getClass() +
                 ", target=" + target +
                 ", sales=" + sales +
-                ", salesreps=" + salesreps +
                 '}';
     }
 }
