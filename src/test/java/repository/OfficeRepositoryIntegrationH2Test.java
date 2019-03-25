@@ -100,7 +100,7 @@ public class OfficeRepositoryIntegrationH2Test {
 
     @Test
     public void testFindByCityIgnoreCase() {
-        List<Office> offices = officeRepository.findByCityIgnoreCase("kyiv");
+        Set<Office> offices = officeRepository.findByCityStartingWithIgnoreCase("ky");
         assertEquals(1, offices.size());
     }
 

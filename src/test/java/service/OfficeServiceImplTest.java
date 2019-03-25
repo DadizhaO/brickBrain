@@ -54,8 +54,8 @@ public class OfficeServiceImplTest {
     @Test
     public void testFindByCityIgnoreCase() {
         List<Office> offices = Arrays.asList(office1, office2);
-        doReturn(offices).when(officeRepository).findByCityIgnoreCase(anyString());
-        List<Office> result = officeService.findByCityIgnoreCase("city");
+        doReturn(offices).when(officeRepository).findByCityStartingWithIgnoreCase(anyString());
+        Set<Office> result = officeService.findByCityStartingWithIgnoreCase("city");
         assertEquals(offices, result);
     }
 

@@ -3,7 +3,6 @@ package service;
 import model.Office;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 public interface OfficeService {
@@ -17,5 +16,5 @@ public interface OfficeService {
 
     void deleteOffice(BigDecimal id);
 
-    List<Office> findByCityIgnoreCase(String city);
+    Set<Office> findByCityStartingWithIgnoreCase(String city);
 }

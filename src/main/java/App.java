@@ -1,4 +1,4 @@
-import model.Order;
+import config.DataConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -12,14 +12,14 @@ public class App {
 
     public static void main(String[] args) {
 
-        ConfigurableApplicationContext context = new AnnotationConfigApplicationContext("config");
+        ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(DataConfig.class);
         OfficeService officeService = context.getBean(OfficeService.class);
-        
+
         LOG.info(officeService.findOfficeById(BigDecimal.valueOf(22)));
 
         LOG.info(officeService.getAllOffices());
 
-        LOG.info(officeService.findByCityIgnoreCase("бубурино"));
+        LOG.info(officeService.findByCityStartingWithIgnoreCase("бубу"));
 
     }
 }
