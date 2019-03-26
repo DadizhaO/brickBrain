@@ -12,8 +12,6 @@ import service.OfficeService;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -29,8 +27,8 @@ public class OfficeServiceImpl implements OfficeService {
     }
 
     @Override
-    public Optional<Office> findOfficeById(BigDecimal id) {
-        return officeRepository.findById(id);
+    public Office findOfficeById(BigDecimal id) {
+        return officeRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -54,8 +52,8 @@ public class OfficeServiceImpl implements OfficeService {
     }
 
     @Override
-    public List<Office> findByCityIgnoreCase(String city) {
-        return officeRepository.findByCityIgnoreCase(city);
+    public Set<Office> findByCityStartingWithIgnoreCase(String city) {
+        return officeRepository.findByCityStartingWithIgnoreCase(city);
     }
 
 }

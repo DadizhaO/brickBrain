@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "1b037bc0-c151-4fee-b88c-6af7e2c4f88e",
+		"name": "springMVC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getOffice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/11",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOfficeNotFound",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOfficeByNameExist ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/?name=бубу",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "бубу"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOfficeByNameNotExist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/?name=kkkk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "kkkk"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateExist",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8090/office/1?sales=1111",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"1"
+					],
+					"query": [
+						{
+							"key": "sales",
+							"value": "1111"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateNotExist ",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/-11?sales=0000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"-11"
+					],
+					"query": [
+						{
+							"key": "sales",
+							"value": "0000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteExist",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteNotExist",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/-111",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						"-111"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOfficeByNameParamNull",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8090/office/?name=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
