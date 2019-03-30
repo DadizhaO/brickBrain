@@ -116,6 +116,21 @@
 		{
 			"name": "updateExist",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [
 					{
@@ -127,7 +142,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8090/office/1?sales=1111",
+					"raw": "http://localhost:8090/office/100?sales=1111",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -135,7 +150,7 @@
 					"port": "8090",
 					"path": [
 						"office",
-						"1"
+						"100"
 					],
 					"query": [
 						{
@@ -180,6 +195,21 @@
 		{
 			"name": "deleteExist",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"body": {
@@ -187,7 +217,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8090/office/2",
+					"raw": "http://localhost:8090/office/100",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -195,7 +225,7 @@
 					"port": "8090",
 					"path": [
 						"office",
-						"2"
+						"100"
 					]
 				}
 			},
@@ -250,6 +280,63 @@
 							"key": "name",
 							"value": ""
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addOffice",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a7aa5baf-4a2e-43d1-9a4e-e787ca0d2986",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "test",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "test",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"city\": \"Lviv\",\n  \"officeDetails\": {\n    \"region\": \"sas\",\n    \"target\": \"\"\n  },\n  \"officeId\": 100,\n  \"sales\": 800\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/office",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"office"
 					]
 				}
 			},

@@ -70,7 +70,12 @@ public class OfficeRepositoryIntegrationH2Test {
 
     @Test
     public void testInsertOffice() {
-        officeRepository.saveAndFlush(NOT_EXIST_OFFICE_INSERT);
+        officeRepository.save(NOT_EXIST_OFFICE_INSERT);
+    }
+
+    @Test
+    public void testInsertOfficeService() {
+        officeService.insertOffice(NOT_EXIST_OFFICE_INSERT);
     }
 
     @Test
@@ -103,6 +108,5 @@ public class OfficeRepositoryIntegrationH2Test {
         Set<Office> offices = officeRepository.findByCityStartingWithIgnoreCase("ky");
         assertEquals(1, offices.size());
     }
-
 
 }

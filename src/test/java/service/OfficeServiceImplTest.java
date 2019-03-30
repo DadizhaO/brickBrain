@@ -11,10 +11,7 @@ import repository.OfficeRepository;
 import service.impl.OfficeServiceImpl;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -44,37 +41,36 @@ public class OfficeServiceImplTest {
     }
 
     @Test
-    public void testFindOrderById() {
+    public void testFindOfficeById() {
         doReturn(Optional.of(office1)).when(officeRepository).findById(any());
         Office result = officeService.findOfficeById(BigDecimal.ONE);
         assertEquals(office1, result);
-        System.out.println(result);
     }
 
     @Test
     public void testFindByCityIgnoreCase() {
-        List<Office> offices = Arrays.asList(office1, office2);
+        Set<Office> offices = new HashSet<>(Arrays.asList(office1, office2));
         doReturn(offices).when(officeRepository).findByCityStartingWithIgnoreCase(anyString());
         Set<Office> result = officeService.findByCityStartingWithIgnoreCase("city");
         assertEquals(offices, result);
     }
 
     @Test
-    public void testInsertOrder() {
+    public void testInsertOffice() {
         doReturn(office1).when(officeRepository).saveAndFlush(any());
         officeService.insertOffice(office1);
         verify(officeRepository, times(1)).saveAndFlush(any());
     }
 
     @Test
-    public void testUpdateOrder() {
+    public void testUpdateOffice() {
         doReturn(office1).when(officeRepository).saveAndFlush(any());
         officeService.updateOffice(office1);
         verify(officeRepository, times(1)).saveAndFlush(any());
     }
 
     @Test
-    public void testDeleteOrder() {
+    public void testDeleteOffice() {
         doNothing().when(officeRepository).deleteById(any());
         officeService.deleteOffice(office1.getOfficeId());
         verify(officeRepository, times(1)).deleteById(any());
