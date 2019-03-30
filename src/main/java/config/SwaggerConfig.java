@@ -22,7 +22,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         List<SecurityScheme> schemeList = new ArrayList<>();
-        schemeList.add(new BasicAuth("basicAuth"));
+        schemeList.add(new BasicAuth("Authorization"));
 
         return new Docket(DocumentationType.SWAGGER_2).securitySchemes(schemeList).select()
                 .apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();

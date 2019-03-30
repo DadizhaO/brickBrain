@@ -1,14 +1,19 @@
 package controller;
 
+import dto.OfficeRequest;
 import exception.AbsentException;
 import exception.UpdateException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import model.Office;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import service.OfficeCreator;
 import service.OfficeService;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
@@ -21,6 +26,18 @@ public class OfficeController {
 
     @Autowired
     private OfficeService officeService;
+
+    @Autowired
+    private OfficeCreator officeCreator;
+
+    @PostMapping
+    @ApiOperation(authorizations = {@Authorization(value = "basicAuth")}, value = "addOffice")
+    public void addOffice(@Valid @RequestBody OfficeRequest officeRequest) {
+        LOG.info("addOffice start, officeRequest={}", officeRequest.toString());
+        Office office = officeCreator.createOffice(officeRequest);
+        officeService.insertOffice(office);
+        LOG.info("addOffice end");
+    }
 
     @GetMapping("/{id}")
     public @ResponseBody
@@ -35,6 +52,7 @@ public class OfficeController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(authorizations = {@Authorization(value = "basicAuth")}, value = "deleteOfficeById")
     public void deleteOfficeById(@PathVariable("id") int id) {
         LOG.info("deleteOfficeById start, id={}", id);
         officeService.deleteOffice(BigDecimal.valueOf(id));
@@ -42,6 +60,7 @@ public class OfficeController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(authorizations = {@Authorization(value = "basicAuth")}, value = "updateOfficeById")
     public void updateOfficeById(@PathVariable("id") int id, @RequestParam("sales") Integer sales) {
         LOG.info("updateOfficeById start id={}, sales={}", id, sales);
         Office office = officeService.findOfficeById(BigDecimal.valueOf(id));
@@ -57,17 +76,17 @@ public class OfficeController {
 
     @GetMapping
     public @ResponseBody
-    Set<Office> getOfficeByNameStartWith(@RequestParam(value = "name", required = false) String name) {
-        LOG.info("getOfficeByNameStartWith start, name={}", name);
-        if (Objects.isNull(name)) {
+    Set<Office> getOfficeByCityStartWith(@RequestParam(value = "city", required = false) String city) {
+        LOG.info("getOfficeByCityStartWith start, city={}", city);
+        if (Objects.isNull(city)) {
             LOG.debug("use getAllOffice");
             return officeService.getAllOffices();
-        }else {
-            Set<Office> result = officeService.findByCityStartingWithIgnoreCase(name);
+        } else {
+            Set<Office> result = officeService.findByCityStartingWithIgnoreCase(city);
             if (result.isEmpty()) {
-                throw new AbsentException("There is no such office, Try other name");
+                throw new AbsentException("There is no such office, Try other city");
             }
-            LOG.info("getOfficeByNameStartWith end");
+            LOG.info("getOfficeByCityStartWith end");
             return result;
         }
     }

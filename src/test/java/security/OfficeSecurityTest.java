@@ -1,5 +1,6 @@
-package controller;
+package security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import config.MainMvcConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -19,21 +22,24 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import util.DtoModelsUtil;
 
 import javax.sql.DataSource;
 
 import static org.hamcrest.core.StringContains.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MainMvcConfig.class})
 @WebAppConfiguration
 @TestPropertySource("classpath:test.properties")
-public class OfficeControllerTest {
+public class OfficeSecurityTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -43,38 +49,59 @@ public class OfficeControllerTest {
 
     private MockMvc mockMvc;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     @Before
     public void setup() {
         Resource initSchema = new ClassPathResource("script\\schema.sql");
         Resource data = new ClassPathResource("script\\data.sql");
         DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema, data);
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(SecurityMockMvcConfigurers.springSecurity()).build();
     }
 
     @Test
-    public void testGetOfficeByIdExist() throws Exception {
-        mockMvc.perform(get("/office/{id}", "1111"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+    @WithMockUser(roles = "ADMIN")
+    public void testAddOfficeAuth() throws Exception {
+        String json = mapper.writeValueAsString(DtoModelsUtil.officeRequest());
+        mockMvc.perform(post("/office").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(authenticated().withRoles("ADMIN"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testOfficeNotFound() throws Exception {
-        mockMvc.perform(get("/office/{id}", "01"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(containsString("There is no such office")))
-                .andExpect(status().isNotFound());
+    public void testAddOfficeNotCorrectPassword() throws Exception {
+        String json = mapper.writeValueAsString(DtoModelsUtil.officeRequest());
+        mockMvc.perform(post("/office")
+                .with(httpBasic("test", "invalid")).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testDeleteOfficeExist() throws Exception {
-        mockMvc.perform(delete("/office/{id}", "1111"))
-                .andExpect(status().isOk());
+    public void testAddOfficeNotCorrectUsername() throws Exception {
+        String json = mapper.writeValueAsString(DtoModelsUtil.officeRequest());
+        mockMvc.perform(post("/office")
+                .with(httpBasic("user", "test")).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testDeleteOfficeNotExist() throws Exception {
+    public void testAddOfficeNoAuth() throws Exception {
+        String json = mapper.writeValueAsString(DtoModelsUtil.officeRequest());
+        mockMvc.perform(post("/office").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteOfficeExistAuth() throws Exception {
+        mockMvc.perform(delete("/office/{id}", "1111")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteOfficeNotExistId() throws Exception {
         mockMvc.perform(delete("/office/{id}", "-11"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -82,12 +109,14 @@ public class OfficeControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     public void testUpdateOfficeExist() throws Exception {
         mockMvc.perform(put("/office/{id}", "1111").param("sales", "777"))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     public void testUpdateOfficeNotExist() throws Exception {
         mockMvc.perform(put("/office/{id}", "-11").param("sales", "777"))
                 .andExpect(status().isUnprocessableEntity())
@@ -96,26 +125,14 @@ public class OfficeControllerTest {
     }
 
     @Test
-    public void testGetOfficeByNameStartingWithExist() throws Exception {
-        mockMvc.perform(get("/office").param("name", "ky"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+    public void testUpdateOfficeNoAuth() throws Exception {
+        mockMvc.perform(put("/office/{id}", "1111").param("sales", "777"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testGetOfficeByNameStartingWithNotExist() throws Exception {
-        mockMvc.perform(get("/office").param("name", "kkkkkkk")).andDo(print())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString("There is no such office, Try other name")));
-
-    }
-
-    @Test
-    public void testGetOfficeByNameStartingWithParamNull() throws Exception {
-        mockMvc.perform(get("/office")).andDo(print())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+    public void testDeleteOfficeExistNoAuth() throws Exception {
+        mockMvc.perform(delete("/office/{id}", "1111")).andExpect(status().isUnauthorized());
     }
 
 }

@@ -37,12 +37,9 @@ public class Office implements Serializable {
     public Office() {
     }
 
-    public Office(BigDecimal office, String city, String region, Salesrep mgr, BigDecimal target, BigDecimal sales) {
-        this.officeId = office;
+    public Office(BigDecimal officeId, String city, BigDecimal sales) {
+        this.officeId = officeId;
         this.city = city;
-        this.region = region;
-        this.mgr = mgr;
-        this.target = target;
         this.sales = sales;
     }
 
