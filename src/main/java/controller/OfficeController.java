@@ -76,17 +76,17 @@ public class OfficeController {
 
     @GetMapping
     public @ResponseBody
-    Set<Office> getOfficeByNameStartWith(@RequestParam(value = "name", required = false) String name) {
-        LOG.info("getOfficeByNameStartWith start, name={}", name);
-        if (Objects.isNull(name)) {
+    Set<Office> getOfficeByCityStartWith(@RequestParam(value = "city", required = false) String city) {
+        LOG.info("getOfficeByCityStartWith start, city={}", city);
+        if (Objects.isNull(city)) {
             LOG.debug("use getAllOffice");
             return officeService.getAllOffices();
         } else {
-            Set<Office> result = officeService.findByCityStartingWithIgnoreCase(name);
+            Set<Office> result = officeService.findByCityStartingWithIgnoreCase(city);
             if (result.isEmpty()) {
-                throw new AbsentException("There is no such office, Try other name");
+                throw new AbsentException("There is no such office, Try other city");
             }
-            LOG.info("getOfficeByNameStartWith end");
+            LOG.info("getOfficeByCityStartWith end");
             return result;
         }
     }
