@@ -97,7 +97,7 @@ public class OfficeControllerTest {
 
     @Test
     public void testGetOfficeByNameStartingWithExist() throws Exception {
-        mockMvc.perform(get("/office").param("name", "ky"))
+        mockMvc.perform(get("/office").param("city", "ky"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
     }
