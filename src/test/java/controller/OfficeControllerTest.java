@@ -104,10 +104,10 @@ public class OfficeControllerTest {
 
     @Test
     public void testGetOfficeByNameStartingWithNotExist() throws Exception {
-        mockMvc.perform(get("/office").param("name", "kkkkkkk")).andDo(print())
+        mockMvc.perform(get("/office").param("city", "kkkkkkk")).andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString("There is no such office, Try other name")));
+                .andExpect(content().string(containsString("There is no such office, Try other city")));
 
     }
 
